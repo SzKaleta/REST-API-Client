@@ -19,13 +19,25 @@ namespace RestApi.Controllers
         {
            using (var client = new HttpClient())
             {
-                string i = "5";
                 client.BaseAddress = new Uri("http://localhost:55279/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var json = await client.GetStringAsync("api/Server"+i);
+                var json = await client.GetStringAsync("api/Server");
                 var list = JsonConvert.DeserializeObject<List<Users>>(json);
                 return list;
+            }
+        }
+
+        public async Task<UserModel> GetUser(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:55279/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = await client.GetStringAsync("api/Server/"+id.ToString());
+                var result = JsonConvert.DeserializeObject<UserModel>(json);
+                return result;
             }
         }
 
@@ -34,6 +46,12 @@ namespace RestApi.Controllers
             GetAllModel listOfUsers = new GetAllModel();
             listOfUsers.results= await GetUsers();
             return View(listOfUsers);
+        }
+
+        public async Task<ActionResult> OneUser(int id)
+        {
+            UserModel user = await GetUser(id);
+            return View(user);
         }
 
         public ActionResult Options()

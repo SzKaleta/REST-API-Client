@@ -291,6 +291,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Client\AllUsers.cshtml" />
     <Content Include="Views\Client\Options.cshtml" />
+    <Content Include="Views\Client\OneUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

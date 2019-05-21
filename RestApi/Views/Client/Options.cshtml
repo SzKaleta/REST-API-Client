@@ -6,6 +6,15 @@
 <h1>Options</h1>
 
 @Html.ActionLink("List all users", "AllUsers", "Client", new { @class = "btn btn-default" })
+@using (Html.BeginForm("OneUser", "Client"))
+{
+    <input type="number" name="id" />
+    <input type="submit" value="Show one user">
+}
+
+
+
+
 
 
 
