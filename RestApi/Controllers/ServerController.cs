@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -12,11 +13,23 @@ namespace RestApi.Controllers
 {
     public class ServerController : ApiController
     {
+        private UsersEntitiesData db;
+
+        public ServerController()
+        {
+            db = new UsersEntitiesData();
+        }
+
+        public ServerController(UsersEntitiesData newDb)
+        {
+            db = newDb;
+        }
+
+
         // GET: api/Server
         public List<UserModel> Get()
         {
-            using (var db = new UsersEntitiesData())
-            {
+
 
                 var UsersList = new List<UserModel>(from a in db.Users.AsEnumerable()
 
@@ -28,27 +41,26 @@ namespace RestApi.Controllers
                                                      }).ToList();
 
                 return UsersList;
-            }
+
         }
 
         // GET: api/Server/5
         public UserModel Get(int id)
         {
-            using (var db = new UsersEntitiesData())
-            {
+
 
                 var UserInstance = new UserModel();
                     UserInstance.user_id = db.Users.Where(d => d.user_id==id).Select(d => d.user_id).FirstOrDefault();
                     UserInstance.name = db.Users.Where(d => d.user_id == id).Select(d => d.name).FirstOrDefault();
                     UserInstance.age = db.Users.Where(d => d.user_id == id).Select(d => d.age).FirstOrDefault();
                 return UserInstance;
-            }
+
         }
 
         // POST: api/Server
         public void Post([FromBody]UserModel newUser)
         {
-            using (var db = new UsersEntitiesData())
+            if(newUser!=null && !String.IsNullOrEmpty(newUser.name) && (newUser.age>0&& newUser.age<121))
             {
                 var insertUser = new Users
                 {
@@ -59,13 +71,14 @@ namespace RestApi.Controllers
                 db.SaveChanges();
             }
 
+            
+
         }
 
         // PUT: api/Server/5
         public void Put(int id, [FromBody]UserModel changeUser)
         {
-            using (var db = new UsersEntitiesData())
-            {
+
                     var result = db.Users.SingleOrDefault(d => d.user_id == id);
                 if (result != null)
                 {
@@ -81,14 +94,13 @@ namespace RestApi.Controllers
 
                     db.SaveChanges();
                 }
-            }
+            
         }
 
         // DELETE: api/Server/5
         public void Delete(int id)
         {
-            using (var db = new UsersEntitiesData())
-            {
+
                 var deleted = db.Users.SingleOrDefault(d => d.user_id == id);
                 if (deleted != null)
                 {
@@ -96,7 +108,7 @@ namespace RestApi.Controllers
                 db.SaveChanges();
                 }
 
-            }
+            
         }
     }
 }

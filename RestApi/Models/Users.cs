@@ -11,11 +11,18 @@ namespace RestApi.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Users
     {
+        [Required(ErrorMessage = "ID is required")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "ID is out of range")]
         public int user_id { get; set; }
+
+        [Required(ErrorMessage = "Name is required")]
         public string name { get; set; }
+
+        [Range(1, 120, ErrorMessage = "Age is out of range")]
         public Nullable<int> age { get; set; }
     }
 }

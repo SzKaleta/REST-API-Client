@@ -1,0 +1,12 @@
+﻿@model RestApi.Models.ClientModels.GetAllModel
+
+@{
+    ViewBag.Title = "AllUsersView";
+}
+<h1>List of users</h1>
+@foreach (var user in Model.results)
+{
+    <p>@user.user_id name: @user.name age: @user.age</p>
+}
+
+
