@@ -58,9 +58,60 @@ namespace RestApi.Controllers
         {
             return View();
         }
+        public async Task<ActionResult> UpdateUser(string name, int? age, int id)
+        {
 
-        // POST: Client/Create
-        [HttpPost]
+                using (var client = new HttpClient())
+                {
+                    UserModel user = new UserModel();
+                    if(!String.IsNullOrEmpty(name))
+                        {
+                            user.name = name;
+
+                        }
+                    if(age>0&&age<121)
+                    {
+                        user.age = age;
+                    }
+                    client.BaseAddress = new Uri("http://localhost:55279/");
+                    await client.PutAsJsonAsync("api/Server/"+id.ToString(), user);
+
+                }
+       
+            return RedirectToAction("Options", "Client");
+
+        }
+
+        public async Task<ActionResult> AddUser(string name, int age)
+        {
+            if (!String.IsNullOrEmpty(name) && (age > 0 && age < 121))
+            {
+                using (var client = new HttpClient())
+                {
+                    UserModel user = new UserModel();
+                    user.age = age;
+                    user.name = name;
+                    client.BaseAddress = new Uri("http://localhost:55279/");
+                    await client.PostAsJsonAsync("api/Server", user);
+
+                }
+            }
+            return RedirectToAction("Options", "Client");
+
+        }
+
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:55279/");
+                await client.DeleteAsync("api/Server/" + id.ToString());
+            }
+            return RedirectToAction("Options", "Client");
+
+        }
+
         public ActionResult Create(FormCollection collection)
         {
             try

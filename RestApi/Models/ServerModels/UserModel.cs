@@ -16,7 +16,7 @@ namespace RestApi.Models.ServerModels
         public string name { get; set; }
 
         [Range(1, 120, ErrorMessage = "Age is out of range")]
-        public Nullable<int> age { get; set; }
+        public int? age { get; set; }
 
         public string toString()
         {

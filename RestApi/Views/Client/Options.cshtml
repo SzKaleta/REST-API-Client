@@ -1,15 +1,48 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Options";
 }
-
 <h1>Options</h1>
 
+
+<h3>Show all user</h3>
 @Html.ActionLink("List all users", "AllUsers", "Client", new { @class = "btn btn-default" })
+<h3>Show user</h3>
 @using (Html.BeginForm("OneUser", "Client"))
 {
-    <input type="number" name="id" />
+    <input type="number" name="id" required />
     <input type="submit" value="Show one user">
+}
+<h3>Add user</h3>
+@using (Html.BeginForm("AddUser", "Client"))
+{
+    <p></p>
+    <p>Enter name</p>
+    <input type="text" name="name" required
+           oninvalid="this.setCustomValidity('Enter User Name Here')"
+           oninput="this.setCustomValidity('')" />
+    <p>Enter age</p>
+    <input type="number" name="age" required />
+    <input type="submit" value="Add user">
+}
+<h3>Update user data</h3>
+@using (Html.BeginForm("UpdateUser", "Client"))
+{
+    <p></p>
+    <p>Enter name</p>
+    <input type="text" name="name" />
+    <p>Enter age</p>
+    <input type="number" name="age" />
+    <p>Enter id</p>
+    <input type="number" name="id" required />
+    <input type="submit" value="Update user">
+}
+<h3>Delete user</h3>
+@using (Html.BeginForm("DeleteUser", "Client"))
+{
+    <p></p>
+    <p>Enter id</p>
+    <input type="number" name="id" required />
+    <input type="submit" value="Delete user">
 }
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -64,11 +65,12 @@ namespace RestApi.Controllers
             {
                 var insertUser = new Users
                 {
-                        name= newUser.name,
-                        age=newUser.age
-                };
-                db.Users.Add(insertUser);
-                db.SaveChanges();
+                        
+                        name = newUser.name,
+                        age = newUser.age
+                    };
+                    db.Users.Add(insertUser);
+                    db.SaveChanges();
             }
 
             
