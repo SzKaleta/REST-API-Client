@@ -4,14 +4,8 @@
 }
 
 <h1>User</h1>
-@if (!String.IsNullOrEmpty(Model.name))
-{
+
     <p>@Model.user_id name: @Model.name age: @Model.age</p>
 
-}
-else
-{
-    <p>No user with this id exists in the database</p>
-}
 
 

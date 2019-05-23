@@ -15,7 +15,11 @@ namespace RestApi.Controllers
 {
     public class ClientController : Controller
     {
-        public async Task<List<Users>> GetUsers()
+        public ActionResult Options()
+        {
+            return View();
+        }
+        private async Task<List<Users>> GetUsers()
         {
            using (var client = new HttpClient())
             {
@@ -28,7 +32,7 @@ namespace RestApi.Controllers
             }
         }
 
-        public async Task<UserModel> GetUser(int id)
+        private async Task<UserModel> GetUser(int id)
         {
             using (var client = new HttpClient())
             {
@@ -45,129 +49,99 @@ namespace RestApi.Controllers
         {
             GetAllModel listOfUsers = new GetAllModel();
             listOfUsers.results= await GetUsers();
-            return View(listOfUsers);
+            if(!listOfUsers.results.Any())
+            {
+                return RedirectToAction("Error", "Error", new { type = "The list of users is empty" });
+            }
+            else
+            {
+                return View(listOfUsers);
+            }
         }
 
         public async Task<ActionResult> OneUser(int id)
         {
             UserModel user = await GetUser(id);
-            return View(user);
+            if (user.user_id==0)
+            {
+                return RedirectToAction("Error", "Error", new { type = "No user with this id exists in the database" });
+            }
+            else
+            {
+                return View(user);
+            }
         }
 
-        public ActionResult Options()
-        {
-            return View();
-        }
         public async Task<ActionResult> UpdateUser(string name, int? age, int id)
         {
-
-                using (var client = new HttpClient())
+            using (var client = new HttpClient())
+            {
+                UserModel user = new UserModel();
+                if (!String.IsNullOrEmpty(name))
                 {
-                    UserModel user = new UserModel();
-                    if(!String.IsNullOrEmpty(name))
-                        {
-                            user.name = name;
-
-                        }
-                    if(age>0&&age<121)
-                    {
-                        user.age = age;
-                    }
-                    client.BaseAddress = new Uri("http://localhost:55279/");
-                    await client.PutAsJsonAsync("api/Server/"+id.ToString(), user);
-
+                    user.name = name;
                 }
-       
-            return RedirectToAction("Options", "Client");
+                if (age > 0 && age < 121)
+                {
+                    user.age = age;
+                }
+                client.BaseAddress = new Uri("http://localhost:55279/");
+                HttpResponseMessage messege = await client.PutAsJsonAsync("api/Server/" + id.ToString(), user);
+                var content = await messege.Content.ReadAsStringAsync();
 
+                if (messege.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("AllUsers", "Client");
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Error", new { type = "Update unsuccessful" });
+                }
+            }
         }
 
-        public async Task<ActionResult> AddUser(string name, int age)
-        {
-            if (!String.IsNullOrEmpty(name) && (age > 0 && age < 121))
+        public async Task<ActionResult> AddUser(string name, int? age)
+        {   
+            HttpResponseMessage messege = new HttpResponseMessage();
+            if (!String.IsNullOrEmpty(name) && (age==null || (age > 0 && age < 121)))
             {
                 using (var client = new HttpClient())
                 {
                     UserModel user = new UserModel();
-                    user.age = age;
+                    if(age!=null)
+                    {
+                        user.age = age;
+                    }
                     user.name = name;
                     client.BaseAddress = new Uri("http://localhost:55279/");
-                    await client.PostAsJsonAsync("api/Server", user);
-
+                    messege = await client.PostAsJsonAsync("api/Server", user);
                 }
             }
-            return RedirectToAction("Options", "Client");
-
+            if (messege.IsSuccessStatusCode)
+            {
+                return RedirectToAction("AllUsers", "Client");
+            }
+            else
+            {
+                return RedirectToAction("Error", "Error", new { type = "Insert unsuccessful" });
+            }
         }
 
         public async Task<ActionResult> DeleteUser(int id)
         {
-
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("http://localhost:55279/");
-                await client.DeleteAsync("api/Server/" + id.ToString());
+                HttpResponseMessage messege = await client.DeleteAsync("api/Server/" + id.ToString());
+                if (messege.IsSuccessStatusCode)
+                {
+                    return RedirectToAction("AllUsers", "Client");
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Error", new { type = "Delete unsuccessful" });
+                }
             }
-            return RedirectToAction("Options", "Client");
-
-        }
-
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Client/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Client/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Client/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Client/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        }       
     }
 }

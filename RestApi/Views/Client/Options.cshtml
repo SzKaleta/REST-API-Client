@@ -9,7 +9,9 @@
 <h3>Show user</h3>
 @using (Html.BeginForm("OneUser", "Client"))
 {
-    <input type="number" name="id" required />
+    <input type="number" name="id" required            
+           oninvalid="this.setCustomValidity('This field is required')"
+           oninput="this.setCustomValidity('')" />
     <input type="submit" value="Show one user">
 }
 <h3>Add user</h3>
@@ -18,10 +20,10 @@
     <p></p>
     <p>Enter name</p>
     <input type="text" name="name" required
-           oninvalid="this.setCustomValidity('Enter User Name Here')"
+           oninvalid="this.setCustomValidity('This field is required')"
            oninput="this.setCustomValidity('')" />
     <p>Enter age</p>
-    <input type="number" name="age" required />
+    <input type="number" name="age" />
     <input type="submit" value="Add user">
 }
 <h3>Update user data</h3>
@@ -33,7 +35,9 @@
     <p>Enter age</p>
     <input type="number" name="age" />
     <p>Enter id</p>
-    <input type="number" name="id" required />
+    <input type="number" name="id" required 
+           oninvalid="this.setCustomValidity('This field is required')"
+           oninput="this.setCustomValidity('')" />
     <input type="submit" value="Update user">
 }
 <h3>Delete user</h3>
@@ -41,7 +45,9 @@
 {
     <p></p>
     <p>Enter id</p>
-    <input type="number" name="id" required />
+    <input type="number" name="id" required            
+           oninvalid="this.setCustomValidity('This field is required')"
+           oninput="this.setCustomValidity('')" />
     <input type="submit" value="Delete user">
 }
 
