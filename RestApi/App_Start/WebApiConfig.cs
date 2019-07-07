@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace RestApi
 {
@@ -12,7 +13,9 @@ namespace RestApi
             // Konfiguracja i usługi składnika Web API
 
             // Trasy składnika Web API
-            config.MapHttpAttributeRoutes();
+            //config.MapHttpAttributeRoutes();
+            var corsAttr = new EnableCorsAttribute("http://localhost:63342", "*", "*");
+            config.EnableCors(corsAttr);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
